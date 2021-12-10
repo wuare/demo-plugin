@@ -1,0 +1,24 @@
+<idea-plugin>
+    <id>org.example.demo-plugin</id>
+    <name>Test Action</name>
+    <vendor email="wuareb@gmail.com" url="https://github.com/wuare">wuareb</vendor>
+
+    <description>Wa Lang</description>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="Wa File"
+                  implementationClass="org.example.lang.WaFileType"
+                  fieldName="INSTANCE"
+                  language="Wa"
+                  extensions="wa"/>
+        <lang.parserDefinition language="Wa"
+                               implementationClass="org.example.lang.WaParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="Wa"
+                                       implementationClass="org.example.lang.WaSyntaxHighlighterFactory"/>
+        <colorSettingsPage implementation="org.example.lang.WaColorSettingsPage"/>
+    </extensions>
+</idea-plugin>

@@ -1,0 +1,20 @@
+{
+  parserClass="org.example.lang.parser.WaParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Wa"
+  psiImplClassSuffix="Impl"
+  psiPackage="org.example.lang.psi"
+  psiImplPackage="org.example.lang.psi.impl"
+
+  elementTypeHolderClass="org.example.lang.psi.WaTypes"
+  elementTypeClass="org.example.lang.psi.WaElementType"
+  tokenTypeClass="org.example.lang.psi.WaTokenType"
+}
+
+simpleFile ::= item_*
+
+private item_ ::= (property|COMMENT|CRLF)
+
+property ::= (KEY? SEPARATOR VALUE?) | KEY
