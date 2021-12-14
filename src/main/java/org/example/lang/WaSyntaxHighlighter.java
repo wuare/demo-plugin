@@ -14,22 +14,28 @@ import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAtt
 
 public class WaSyntaxHighlighter extends SyntaxHighlighterBase {
 
-    public static final TextAttributesKey SEPARATOR =
-            createTextAttributesKey("SIMPLE_SEPARATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
-    public static final TextAttributesKey KEY =
-            createTextAttributesKey("SIMPLE_KEY", DefaultLanguageHighlighterColors.KEYWORD);
-    public static final TextAttributesKey VALUE =
-            createTextAttributesKey("SIMPLE_VALUE", DefaultLanguageHighlighterColors.STRING);
+    public static final TextAttributesKey NUMBER =
+            createTextAttributesKey("WA_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
+    public static final TextAttributesKey STRING =
+            createTextAttributesKey("WA_STRING", DefaultLanguageHighlighterColors.STRING);
+    public static final TextAttributesKey IDENT =
+            createTextAttributesKey("WA_IDENT", DefaultLanguageHighlighterColors.IDENTIFIER);
+    public static final TextAttributesKey KEYWORD =
+            createTextAttributesKey("WA_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
+    public static final TextAttributesKey PARENTHESES =
+            createTextAttributesKey("WA_PARENTHESES", DefaultLanguageHighlighterColors.PARENTHESES);
     public static final TextAttributesKey COMMENT =
-            createTextAttributesKey("SIMPLE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
+            createTextAttributesKey("WA_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
     public static final TextAttributesKey BAD_CHARACTER =
-            createTextAttributesKey("SIMPLE_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
+            createTextAttributesKey("WA_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
 
 
     private static final TextAttributesKey[] BAD_CHAR_KEYS = new TextAttributesKey[]{BAD_CHARACTER};
-    private static final TextAttributesKey[] SEPARATOR_KEYS = new TextAttributesKey[]{SEPARATOR};
-    private static final TextAttributesKey[] KEY_KEYS = new TextAttributesKey[]{KEY};
-    private static final TextAttributesKey[] VALUE_KEYS = new TextAttributesKey[]{VALUE};
+    private static final TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{NUMBER};
+    private static final TextAttributesKey[] STRING_KEYS = new TextAttributesKey[]{STRING};
+    private static final TextAttributesKey[] IDENT_KEYS = new TextAttributesKey[]{IDENT};
+    private static final TextAttributesKey[] KEYWORD_KEYS = new TextAttributesKey[]{KEYWORD};
+    private static final TextAttributesKey[] PARENTHESES_KEYS = new TextAttributesKey[]{PARENTHESES};
     private static final TextAttributesKey[] COMMENT_KEYS = new TextAttributesKey[]{COMMENT};
     private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
@@ -41,18 +47,27 @@ public class WaSyntaxHighlighter extends SyntaxHighlighterBase {
 
     @Override
     public TextAttributesKey @NotNull [] getTokenHighlights(IElementType tokenType) {
-        if (tokenType.equals(WaTypes.SEPARATOR)) {
-            return SEPARATOR_KEYS;
+        if (tokenType.equals(WaTypes.NUMBER)) {
+            return NUMBER_KEYS;
         }
-        if (tokenType.equals(WaTypes.KEY)) {
-            return KEY_KEYS;
+
+        if (tokenType.equals(WaTypes.IDENT)) {
+            return IDENT_KEYS;
         }
-        if (tokenType.equals(WaTypes.VALUE)) {
-            return VALUE_KEYS;
+
+        if (tokenType.equals(WaTypes.STRING)) {
+            return STRING_KEYS;
         }
-        if (tokenType.equals(WaTypes.COMMENT)) {
-            return COMMENT_KEYS;
+
+        if (tokenType.equals(WaTypes.IF) || tokenType.equals(WaTypes.ELSE) || tokenType.equals(WaTypes.WHILE)
+                || tokenType.equals(WaTypes.RETURN) || tokenType.equals(WaTypes.VAR) || tokenType.equals(WaTypes.FUNC)) {
+            return KEYWORD_KEYS;
         }
+
+        if (tokenType.equals(WaTypes.LPAREN) || tokenType.equals(WaTypes.RPAREN)) {
+            return PARENTHESES_KEYS;
+        }
+
         if (tokenType.equals(TokenType.BAD_CHARACTER)) {
             return BAD_CHAR_KEYS;
         }

@@ -1,45 +1,60 @@
-// Copyright 2000-2020 JetBrains s.r.o. and other contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package org.example.lang;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import org.example.lang.psi.WaTypes;
-import com.intellij.psi.TokenType;
+
+import static com.intellij.psi.TokenType.BAD_CHARACTER;
+import static com.intellij.psi.TokenType.WHITE_SPACE;
+import static org.example.lang.psi.WaTypes.*;
 
 %%
 
+%{
+  public WaLexer() {
+    this((java.io.Reader)null);
+  }
+%}
+
+%public
 %class WaLexer
 %implements FlexLexer
-%unicode
 %function advance
 %type IElementType
-%eof{  return;
-%eof}
+%unicode
 
-CRLF=\R
-WHITE_SPACE=[\ \n\t\f]
-FIRST_VALUE_CHARACTER=[^ \n\f\\] | "\\"{CRLF} | "\\".
-VALUE_CHARACTER=[^\n\f\\] | "\\"{CRLF} | "\\".
-END_OF_LINE_COMMENT=("#"|"!")[^\r\n]*
-SEPARATOR=[:=]
-KEY_CHARACTER=[^:=\ \n\t\f\\] | "\\ "
+EOL=\R
+WHITE_SPACE=\s+
+IDENT=[a-z]+
+STRING=\".*\"
+NUMBER=[0-9]+
 
-%state WAITING_VALUE
 
 %%
+<YYINITIAL> {
+  {WHITE_SPACE}      { return WHITE_SPACE; }
 
-<YYINITIAL> {END_OF_LINE_COMMENT}                           { yybegin(YYINITIAL); return WaTypes.COMMENT; }
+  "if"               { return IF; }
+  "else"             { return ELSE; }
+  "while"            { return WHILE; }
+  "return"           { return RETURN; }
+  "var"              { return VAR; }
+  "func"             { return FUNC; }
+  "("                { return LPAREN; }
+  ")"                { return RPAREN; }
+  "{"                { return LBRACE; }
+  "}"                { return RBRACE; }
+  ";"                { return SEMICOLON; }
+  "="                { return ASSIGN; }
+  "+"                { return ADD; }
+//  "-"                { return SUB; }
+//  "*"                { return MUL; }
+//  "/"                { return DIV; }
+//  "."                { return DOT; }
 
-<YYINITIAL> {KEY_CHARACTER}+                                { yybegin(YYINITIAL); return WaTypes.KEY; }
+  {STRING}           { return STRING; }
+  {IDENT}            { return IDENT; }
+  {NUMBER}           { return NUMBER; }
 
-<YYINITIAL> {SEPARATOR}                                     { yybegin(WAITING_VALUE); return WaTypes.SEPARATOR; }
+}
 
-<WAITING_VALUE> {CRLF}({CRLF}|{WHITE_SPACE})+               { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-
-<WAITING_VALUE> {WHITE_SPACE}+                              { yybegin(WAITING_VALUE); return TokenType.WHITE_SPACE; }
-
-<WAITING_VALUE> {FIRST_VALUE_CHARACTER}{VALUE_CHARACTER}*   { yybegin(YYINITIAL); return WaTypes.VALUE; }
-
-({CRLF}|{WHITE_SPACE})+                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-
-[^]                                                         { return TokenType.BAD_CHARACTER; }
+[^] { return BAD_CHARACTER; }

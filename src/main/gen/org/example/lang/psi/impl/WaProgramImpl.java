@@ -11,20 +11,26 @@ import static org.example.lang.psi.WaTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.example.lang.psi.*;
 
-public class WaPropertyImpl extends ASTWrapperPsiElement implements WaProperty {
+public class WaProgramImpl extends ASTWrapperPsiElement implements WaProgram {
 
-  public WaPropertyImpl(@NotNull ASTNode node) {
+  public WaProgramImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull WaVisitor visitor) {
-    visitor.visitProperty(this);
+    visitor.visitProgram(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof WaVisitor) accept((WaVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @NotNull
+  public List<WaStmt> getStmtList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, WaStmt.class);
   }
 
 }

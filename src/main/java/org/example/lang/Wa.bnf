@@ -13,8 +13,28 @@
   tokenTypeClass="org.example.lang.psi.WaTokenType"
 }
 
-simpleFile ::= item_*
+waFile ::= program
 
-private item_ ::= (property|COMMENT|CRLF)
+program ::= stmt*
 
-property ::= (KEY? SEPARATOR VALUE?) | KEY
+stmt ::= (ifStmt|whileStmt|returnStmt|exprStmt|declareStmt)
+
+ifStmt ::= IF LPAREN expr RPAREN LBRACE block RBRACE ELSE LBRACE block RBRACE
+
+whileStmt ::= WHILE LPAREN expr RPAREN LBRACE block RBRACE
+
+returnStmt ::= RETURN expr SEMICOLON
+
+exprStmt ::= expr SEMICOLON
+
+declareStmt ::= varDeclareStmt | funcDeclareStmt
+
+varDeclareStmt ::= VAR IDENT (ASSIGN expr)? SEMICOLON
+
+funcDeclareStmt ::= FUNC IDENT LPAREN RPAREN LBRACE block RBRACE
+
+block ::= stmt*
+
+expr ::= literal_expr (ADD literal_expr)*
+
+literal_expr ::= NUMBER|STRING|IDENT
